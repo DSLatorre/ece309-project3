@@ -1,0 +1,21 @@
+name: Linux CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v7
+
+      - name: Configure with sanitizers and warnings as errors
+        run: cmake -S . -B build -DMH_WERROR=ON
+
+      - name: Build
+        run: cmake --build build -j2
+
+      - name: Run all tests
+        run: ctest --test-dir build --output-on-failure
